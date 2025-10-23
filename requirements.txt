@@ -1,0 +1,25 @@
+# FastAPI web framework
+fastapi==0.115.0
+
+# ASGI server to run FastAPI app
+uvicorn[standard]==0.30.3
+
+# PostgreSQL database adapter
+psycopg2-binary==2.9.9
+
+# ORM for handling database models and queries
+SQLAlchemy==2.0.34
+
+# Load environment variables from .env file
+python-dotenv==1.0.1
+
+# Password hashing (bcrypt is secure & fast)
+bcrypt==4.2.0
+
+# JWT authentication for access & refresh tokens
+PyJWT==2.9.0
+
+# Data validation and request/response schemas
+pydantic==2.9.2
+
+#you may need to add some extra dependencies
