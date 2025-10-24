@@ -1,4 +1,4 @@
-# Expense Tracker API (Auth Service)
+# Auth Service
 
 Small FastAPI-based authentication service used by the Expense Tracker project.  
 Provides user sign-up, sign-in, JWT issuance (access + refresh), and simple DB migrations.
