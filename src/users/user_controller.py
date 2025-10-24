@@ -26,7 +26,8 @@ class UserController:
             user_id=uuid.uuid4(),
             name=user_data.name,
             email=user_data.email,
-            password=hashed_password
+            password=hashed_password,
+            age=user_data.age
         )
         
         db.add(db_user)
@@ -78,6 +79,8 @@ class UserController:
         user.email = user_data.email
         if user_data.password:
             user.password = get_password_hash(user_data.password)
+        if user_data.age is not None:
+            user.age = user_data.age
         
         db.commit()
         db.refresh(user)

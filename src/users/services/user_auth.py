@@ -20,7 +20,8 @@ def sign_up(user_data: UserCreate, db: Session) -> Dict:
     new_user = User(
         name=user_data.name,
         email=user_data.email,
-        password=hashed_password
+        password=hashed_password,
+        age=user_data.age
     )
     
     db.add(new_user)
@@ -34,7 +35,8 @@ def sign_up(user_data: UserCreate, db: Session) -> Dict:
         "user": {
             "user_id": str(new_user.user_id),
             "name": new_user.name,
-            "email": new_user.email
+            "email": new_user.email,
+            "age": new_user.age
         },
         "access_token": access_token,
         "refresh_token": refresh_token,
@@ -63,7 +65,8 @@ def sign_in(login_data: UserLogin, db: Session) -> Dict:
         "user": {
             "user_id": str(user.user_id),
             "name": user.name,
-            "email": user.email
+            "email": user.email,
+            "age": user.age
         },
         "access_token": access_token,
         "refresh_token": refresh_token,

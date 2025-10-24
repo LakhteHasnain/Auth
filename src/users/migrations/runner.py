@@ -48,6 +48,7 @@ class MigrationRunner:
             migration_files = [
                 ("001", "001_create_users_table.py"),
                 ("002", "002_add_timestamps.py"),
+                ("003", "003_create_token_blacklist.py"),
             ]
             
             for migration_num, filename in migration_files:
@@ -159,6 +160,7 @@ class MigrationRunner:
         
         try:
             migration_files = [
+                ("003", "003_create_token_blacklist.py"),
                 ("002", "002_add_timestamps.py"),
                 ("001", "001_create_users_table.py"),
             ]

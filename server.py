@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from slowapi.errors import RateLimitExceeded
 from sqlalchemy.orm import Session
 import uvicorn
 import os
@@ -15,10 +16,21 @@ from src.users.user_routes import router as user_router
 # Import error handler
 from src.users.core.error_handler import format_error_response, format_validation_error_response
 
+# Import rate limiting
+from src.config.rate_limit import limiter, rate_limit_exceeded_handler
+
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Expense Tracker API")
+
+# Add rate limiter to app state
+app.state.limiter = limiter
+
+# Custom exception handler for rate limit exceeded
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return await rate_limit_exceeded_handler(request, exc)
 
 # Custom exception handler for HTTPException
 @app.exception_handler(HTTPException)

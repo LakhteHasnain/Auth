@@ -4,6 +4,7 @@ from typing import Optional
 from uuid import UUID
 import os
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 
 load_dotenv()
 
@@ -36,10 +37,39 @@ def create_refresh_token(data: dict, expires_delta: Optional[timedelta] = None) 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def verify_token(token: str) -> Optional[dict]:
-    """Verify and decode JWT token"""
+def decode_token(token: str) -> Optional[dict]:
+    """
+    Decode JWT token without checking blacklist
+    Used by token blacklist service to get expiration time
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        return None
+
+def verify_token(token: str, db: Session = None) -> Optional[dict]:
+    """
+    Verify and decode JWT token
+    
+    Also checks if token is blacklisted (revoked)
+    
+    Args:
+        token: JWT token to verify
+        db: Database session (optional, for blacklist check)
+        
+    Returns:
+        Token payload if valid, None if invalid or blacklisted
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        
+        # Check if token is blacklisted (if db session provided)
+        if db is not None:
+            from src.users.services.token_blacklist_service import is_token_blacklisted
+            if is_token_blacklisted(token, db):
+                return None  # Token is blacklisted
+        
         return payload
     except JWTError:
         return None
